@@ -1,5 +1,6 @@
 ﻿using Entregador_Drone.Server.Serviços;
 using Entregador_Drone.Server.Serviços.Interface;
+using Entregador_Drone.Server.Serviços.ProjetoDroneDelivery.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddScoped<IPathfindingService, AStarService>();
+builder.Services.AddScoped<DistanciaService>();
+builder.Services.AddScoped<GreedyPlanner>();
+builder.Services.AddHostedService<AutomaticAssignmentService>();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

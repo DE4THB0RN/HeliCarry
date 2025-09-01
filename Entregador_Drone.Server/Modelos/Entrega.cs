@@ -22,5 +22,15 @@
             }
         }
 
+        public List<C_No> GetRota()
+        {
+            return Rota;
+        }
+
+        public void SetRota(List<C_No> novaRota)
+        {
+            Rota = novaRota;
+        }
+
     }
 }

@@ -84,7 +84,6 @@ const CityMap: React.FC = () => {
                     className="text-center bg-success text-white fw-bold"
                     title={`Pedido ${pedido.id} (${pedido.prioridade})`}
                 >
-                    P
                 </td>
             );
         }
