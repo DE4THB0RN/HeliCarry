@@ -1,7 +1,8 @@
 
 # HeliCarry
 
-Solução completa para simulação e gerenciamento de entregas com drones, composta por uma API robusta em ASP.NET Core (.NET 8) e uma interface web moderna em React + TypeScript + Vite.
+Um projeto que eu sei que eu poderia trazer grandes melhorias com poucas horas a mais, mas me orgulho de ter deixado do jeito que está atualmente. 
+A cidade é representada como um grafo de 100x100, assim, um método A* é utilizado para encontrar rapidamente os melhores caminhos em meio aos múltiplos obstáculso. Um algoritmo guloso busca juntar o máximo de pedidos em uma única entrega de forma automática e assíncrona. Infelizmente, não consegui tornar o front end muito refinado e houveram problemas para mostrar os drones caminhando pela grid. No entanto, o ponto ciano é a base, pontos vermelhos são obstáculos, e verdes são objetivos.O projeto é composto por uma API robusta em ASP.NET Core (.NET 8) e uma interface web em React + TypeScript + Vite. É recomendado esperar um pouco para o back end se conectar ao banco de dados antes de começar a registrar drones e pedidos.
 
 ---
 
