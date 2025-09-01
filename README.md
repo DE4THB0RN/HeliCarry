@@ -1,5 +1,5 @@
 
-﻿# HeliCarry
+# HeliCarry
 
 Solução completa para simulação e gerenciamento de entregas com drones, composta por uma API robusta em ASP.NET Core (.NET 8) e uma interface web moderna em React + TypeScript + Vite.
 
