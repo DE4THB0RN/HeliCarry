@@ -3,6 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entregador_Drone.Server.Modelos
 {
+    public class PedidoDto
+    {
+        public int LocalizacaoClienteId { get; set; } // Apenas o ID
+        public double Peso { get; set; }
+        public string Prioridade { get; set; }
+    }
+
     public class Pedido
     {
         public int Id { get; set; }

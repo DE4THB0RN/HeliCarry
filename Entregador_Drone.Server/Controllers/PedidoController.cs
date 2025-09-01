@@ -41,41 +41,33 @@ namespace Entregador_Drone.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Pedido>> Post([FromBody] Pedido pedido)
+        public async Task<ActionResult<Pedido>> Post([FromBody] PedidoDto pedidoDto)
         {
-            _context.Pedido.Add(pedido);
+            // 1. Encontre o nó do cliente com base no ID recebido do frontend
+            var localizacaoCliente = await _context.C_No.FindAsync(pedidoDto.LocalizacaoClienteId);
 
+            // 2. Verifique se o nó existe
+            if (localizacaoCliente == null)
+            {
+                return NotFound("Localização do cliente não encontrada.");
+            }
+
+            // 3. Crie a entidade Pedido a partir do DTO
+            var novoPedido = new Pedido
+            {
+                LocalizacaoCliente = localizacaoCliente,
+                Peso = pedidoDto.Peso,
+                Prioridade = pedidoDto.Prioridade,
+                Status = StatusPedido.Pendente,
+                TempoCriacao = DateTime.Now
+            };
+
+            // 4. Salve a nova entidade no banco de dados
+            _context.Pedido.Add(novoPedido);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = pedido.Id }, pedido);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] Pedido pedido)
-        {
-            if (id != pedido.Id)
-            {
-                return BadRequest("ID do pedido não corresponde ao ID fornecido na URL.");
-            }
-
-            _context.Entry(pedido).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await _context.Pedido.AnyAsync(b => b.Id == id))
-                {
-                    return NotFound($"Pedido com ID {id} não encontrado.");
-                }
-
-                throw;
-
-            }
-
-            return NoContent();
+            // 5. Retorne o pedido criado
+            return CreatedAtAction(nameof(GetById), new { id = novoPedido.Id }, novoPedido);
         }
 
         [HttpDelete("{id}")]

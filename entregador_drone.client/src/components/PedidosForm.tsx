@@ -16,33 +16,23 @@ const PedidoForm: React.FC<PedidoFormProps> = ({ onCreated }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!peso || peso <= 0) {
-            setError("Peso inválido");
-            return;
-        }
+        // ... validação do peso
 
-        // cálculo do ID baseado nas coordenadas
-        const localizacaoId = coordenadaX * 100 + coordenadaY;
+        // O ID da localização do cliente
+        const localizacaoClienteId = coordenadaX * 100 + coordenadaY;
 
         try {
             const novoPedido = {
-                LocalizacaoCliente: { id: localizacaoId },
+                // Altere esta linha para enviar apenas o ID da localização
+                localizacaoClienteId,
                 peso,
                 prioridade,
-                Entrega: null,
-                EntregaId: null,
-                status: "Pendente",
-                TempoCriacao: new Date().toISOString(),
             };
 
             const resp = await axios.post<pedido>("/api/pedido", novoPedido);
             if (onCreated) onCreated(resp.data);
 
-            setPeso(0);
-            setPrioridade("Baixa");
-            setCoordenadaX(0);
-            setCoordenadaY(0);
-            setError(null);
+            // ... resetar o formulário
         } catch (err) {
             setError("Erro ao criar pedido");
             console.error(err);
@@ -92,22 +82,26 @@ const PedidoForm: React.FC<PedidoFormProps> = ({ onCreated }) => {
 
                         <div className="row g-3">
                             <div className="col-md-6">
-                                <label className="form-label">Coordenada X</label>
+                                <label className="form-label">Coordenada X (1 a 100)</label>
                                 <input
                                     type="number"
                                     className="form-control"
                                     value={coordenadaX}
                                     onChange={(e) => setCoordenadaX(parseInt(e.target.value))}
+                                    min={1}
+                                    max={100}
                                     required
                                 />
                             </div>
                             <div className="col-md-6">
-                                <label className="form-label">Coordenada Y</label>
+                                <label className="form-label">Coordenada Y (1 a 100)</label>
                                 <input
                                     type="number"
                                     className="form-control"
                                     value={coordenadaY}
                                     onChange={(e) => setCoordenadaY(parseInt(e.target.value))}
+                                    min={1}
+                                    max={100}
                                     required
                                 />
                             </div>
