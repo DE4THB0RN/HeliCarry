@@ -66,7 +66,7 @@ const CityMap: React.FC = () => {
             return (
                 <td
                     key={`${x}-${y}`}
-                    className="text-center bg-dark text-dark fw-bold"
+                    className="text-center bg-warning text-dark fw-bold"
                     title={`Drone ${drone.id} (${drone.status})`}
                 >
                 </td>

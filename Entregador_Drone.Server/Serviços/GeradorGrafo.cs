@@ -15,8 +15,8 @@ namespace Entregador_Drone.Server.Serviços
 
             int largura = 100;
             int altura = 100;
-            bool isBase = false;
-            bool isObstaculo = false;
+            bool isBase;
+            bool isObstaculo;
 
             for (int x = 0; x < largura; x++)
             {

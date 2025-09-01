@@ -55,7 +55,7 @@ namespace Entregador_Drone.Server.Controllers
             // Cria uma nova instância do Drone a partir do DTO
             var novoDrone = new Drone
             {
-                CapacidadeMaximaKg = droneDto.CapacidadeMaximaKg,
+                CapacidadeMaximaKg = droneDto.CapacidadeMaxKg,
                 AutonomiaKm = droneDto.AutonomiaKm,
                 BateriaAtual = droneDto.BateriaAtual,
                 ConsumoPorKm = droneDto.ConsumoPorKm,

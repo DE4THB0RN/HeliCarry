@@ -29,14 +29,15 @@
             private readonly IPathfindingService _path;
             private readonly AppDbContext _context;
             private readonly ILogger<GreedyPlanner> _logger;
+            private readonly ILogger<AutomaticAssignmentService> _loggerAA;
             private const double RESERVA_PERCENT = 20.0;
 
-            public GreedyPlanner(DistanciaService dist, IPathfindingService path, AppDbContext context, ILogger<GreedyPlanner> logger)
+            public GreedyPlanner(DistanciaService dist, IPathfindingService path, AppDbContext context, ILogger<AutomaticAssignmentService> logger)
             {
                 _dist = dist;
                 _path = path;
                 _context = context;
-                _logger = logger;
+                _loggerAA = logger;
             }
 
             public GreedyPlanner(DistanciaService dist, IPathfindingService path, AppDbContext context)
@@ -64,17 +65,18 @@
             public async Task<PlannerResult?> PlanForDroneAsync(Drone drone, List<Pedido> candidatos, CancellationToken ct)
             {
                 if (drone == null) return null;
+                _loggerAA.LogInformation("Iniciando planejamento para drone {DroneId}", drone.Id);
 
                 var baseNo = await _context.C_No.FirstOrDefaultAsync(n => n.IsBase, ct);
                 var origem = drone.LocalizacaoAtual ?? baseNo;
                 if (origem == null)
                 {
-                    _logger.LogWarning("Base e origem não definidos para drone {DroneId}", drone.Id);
+                    _loggerAA.LogWarning("Base e origem não definidos para drone {DroneId}", drone.Id);
                     return null;
                 }
 
                 // inicializa rota: origem -> base (se base diferente)
-                var route = new List<C_No> { origem };
+                var route = new List<C_No> { origem, baseNo ?? origem };
                 if (baseNo != null && baseNo.Id != origem.Id) route.Add(baseNo);
 
                 double pesoTotal = 0.0;
@@ -84,6 +86,12 @@
                     .OrderByDescending(p => MapPriority(p.Prioridade))
                     .ThenBy(p => p.TempoCriacao)
                     .ToList();
+
+                if (candidatos.Count == 0)
+                {
+                    _loggerAA.LogInformation("Nenhum pedido pendente encontrado no banco.");
+                    return null;
+                }
 
                 bool insertedSomething = true;
                 while (insertedSomething)
@@ -96,14 +104,37 @@
 
                     foreach (var p in candidateList.Except(assigned).ToList())
                     {
-                        if (pesoTotal + p.Peso > drone.CapacidadeMaximaKg) continue;
+
+
+                        if (pesoTotal + p.Peso > drone.CapacidadeMaximaKg)
+                        {
+                            _loggerAA.LogDebug("Pedido {PedidoId} descartado: peso {Peso}kg excede capacidade {Capacidade}kg",
+                                p.Id, p.Peso, drone.CapacidadeMaximaKg);
+                            continue;
+                        }
 
                         var pNode = p.LocalizacaoCliente;
-                        if (pNode == null) continue;
+                        if (pNode == null)
+                        {
+                            _loggerAA.LogWarning("Pedido {PedidoId} não possui LocalizacaoCliente", p.Id);
+                            continue;
+                        }
 
                         // quick check reachability from origem
                         var reachCheck = DistKm(drone, origem, pNode, baseNo);
-                        if (double.IsNaN(reachCheck)) continue;
+                        if (double.IsNaN(reachCheck))
+                        {
+                            _loggerAA.LogDebug("Pedido {PedidoId} descartado: distância até cliente é inválida", p.Id);
+                            continue;
+                        }
+
+                        // Verifica distância de cliente até base
+                        var distAteBase = DistKm(drone, pNode, baseNo, baseNo);
+                        if (double.IsNaN(distAteBase))
+                        {
+                            _loggerAA.LogDebug("Pedido {PedidoId} descartado: distância cliente->base inválida", p.Id);
+                            continue;
+                        }
 
                         for (int i = 0; i < route.Count - 1; i++)
                         {

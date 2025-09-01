@@ -13,6 +13,7 @@ namespace Entregador_Drone.Server.Modelos
     public class Pedido
     {
         public int Id { get; set; }
+        public int LocalizacaoClienteId { get; set; }
         public C_No LocalizacaoCliente { get; set; }
         public double Peso { get; set; }
         public string Prioridade { get; set; }

@@ -56,6 +56,7 @@ namespace Entregador_Drone.Server.Controllers
             var novoPedido = new Pedido
             {
                 LocalizacaoCliente = localizacaoCliente,
+                LocalizacaoClienteId = localizacaoCliente.Id,
                 Peso = pedidoDto.Peso,
                 Prioridade = pedidoDto.Prioridade,
                 Status = StatusPedido.Pendente,

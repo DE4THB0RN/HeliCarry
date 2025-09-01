@@ -3,16 +3,16 @@
 
     public class DroneDto
     {
-        public double CapacidadeMaximaKg { get; set; }
+        public double CapacidadeMaxKg { get; set; }
         public double AutonomiaKm { get; set; }
         public double BateriaAtual { get; set; }
         public double ConsumoPorKm { get; set; }
         public double ConsumoPorSegundo { get; set; }
         public string Status { get; set; }
 
-        public DroneDto(double capacidadeMaximaKg, double autonomiaKm, double bateriaAtual, double consumoPorKm, double consumoPorSegundo, string status)
+        public DroneDto(double capacidadeMaxKg, double autonomiaKm, double bateriaAtual, double consumoPorKm, double consumoPorSegundo, string status)
         {
-            CapacidadeMaximaKg = capacidadeMaximaKg;
+            CapacidadeMaxKg = capacidadeMaxKg;
             AutonomiaKm = autonomiaKm;
             BateriaAtual = bateriaAtual;
             ConsumoPorKm = consumoPorKm;

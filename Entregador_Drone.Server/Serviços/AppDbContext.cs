@@ -11,6 +11,11 @@ namespace Entregador_Drone.Server.Serviços
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Pedido>()
+                .HasOne(p => p.LocalizacaoCliente)
+                .WithMany() // supondo que C_No não precise de coleção de pedidos
+                .HasForeignKey(p => p.LocalizacaoClienteId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<Cidade> Cidade { get; set; }
