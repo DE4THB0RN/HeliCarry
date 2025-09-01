@@ -41,13 +41,36 @@ namespace Entregador_Drone.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Drone>> Post([FromBody] Drone drone)
+        public async Task<ActionResult<Drone>> Post([FromBody] DroneDto droneDto)
         {
-            _context.Drone.Add(drone);
+            var baseNode = await _context.C_No.FirstOrDefaultAsync(n => n.IsBase);
 
+            if (baseNode == null)
+            {
+                // Se não houver uma base cadastrada, retorna um erro 404 ou 500.
+                // O 404 (Not Found) é uma opção válida, pois o recurso (a base) não existe.
+                return NotFound("Nenhuma base de drone foi encontrada para registrar o novo drone.");
+            }
+
+            // Cria uma nova instância do Drone a partir do DTO
+            var novoDrone = new Drone
+            {
+                CapacidadeMaximaKg = droneDto.CapacidadeMaximaKg,
+                AutonomiaKm = droneDto.AutonomiaKm,
+                BateriaAtual = droneDto.BateriaAtual,
+                ConsumoPorKm = droneDto.ConsumoPorKm,
+                ConsumoPorSegundo = droneDto.ConsumoPorSegundo,
+                // Atribui a base de operações encontrada como a localização inicial
+                LocalizacaoAtual = baseNode,
+                Status = "Idle"
+            };
+
+            _context.Drone.Add(novoDrone);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = drone.Id }, drone);
+            // Retorna o novo drone criado com a localização base
+            return CreatedAtAction(nameof(Get), new { id = novoDrone.Id }, novoDrone);
+
         }
 
         [HttpPut("{id}")]

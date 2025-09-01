@@ -1,4 +1,4 @@
-export type StatusDrone =
+﻿export type StatusDrone =
     | "Idle"
     | "Carregando"
     | "EmVoo"
@@ -13,48 +13,48 @@ export type StatusEntrega =
 
 
 export interface cidade {
-    Id: number;
-    Nos: c_no[];
+    id: number;
+    nos: c_no[];
 }
 
 export interface c_no {
-    Id: number;
-    X: number;
-    Y: number;
-    IsBase: boolean;
-    IsObstaculo: boolean;
-    CidadeId: number;
-    Cidade: cidade;
+    id: number;
+    x: number;
+    y: number;
+    isBase: boolean;
+    isObstaculo: boolean;
+    cidadeId: number;
+    cidade: cidade;
 }
 
 export interface pedido {
-    Id: number;
-    LocalizacaoCliente: c_no;
-    Peso: number;
-    Prioridade?: "Baixa" | "Media" | "Alta";
-    Entrega: entrega | null;
-    EntregaId: number | null; 
-    Status: "Pendente" | "EmRota" | "Entregue" | "Cancelado";
-    TempoCriacao: string;
+    id: number;
+    localizacaoCliente: c_no;
+    peso: number;
+    prioridade?: "Baixa" | "Media" | "Alta";
+    entrega: entrega | null;
+    entregaId: number | null; 
+    status: "Pendente" | "EmRota" | "Entregue" | "Cancelado";
+    tempoCriacao: string;
 }
 
 export interface entrega {
-    Id: number;
-    DroneId: number;
-    Pedidos: pedido[];
-    Rota: c_no[];
-    DistanciaTotal: number;
-    TempoEstimado: string;
-    Status: StatusEntrega;
+    id: number;
+    droneId: number;
+    pedidos: pedido[];
+    rota: c_no[];
+    distanciaTotal: number;
+    tempoEstimado: string;
+    status: StatusEntrega;
 }
 
 export interface drone {
-    Id: number;
-    CapacidadeMaximaKg: number;
-    AutonomiaKm: number;
-    BateriaAtual: number;
-    ConsumoPorKm: number;
-    ConsumoPorSegundo: number;
-    LocalizacaoAtual: c_no;
-    Status: StatusDrone;
+    id: number;
+    capacidadeMaximaKg: number;
+    autonomiaKm: number;
+    bateriaAtual: number;
+    consumoPorKm: number;
+    consumoPorSegundo: number;
+    localizacaoAtual: c_no;
+    status: StatusDrone;
 }

@@ -18,9 +18,6 @@ const DroneForm: React.FC<DroneFormProps> = ({ onCreated }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // cálculo do id da localização atual
-        const localizacaoAtualId = 2378;
-
         try {
             const novoDrone = {
                 capacidadeMaxKg,
@@ -28,7 +25,6 @@ const DroneForm: React.FC<DroneFormProps> = ({ onCreated }) => {
                 bateriaAtual,
                 consumoPorKm,
                 consumoPorSegundo,
-                localizacaoAtual: { id: localizacaoAtualId },
                 status: "Idle",
             };
 

@@ -18,25 +18,26 @@ const CityMap: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const resp = await axios.get<CidadeResponse>("/api/cidade/estado");
+                const resp = await axios.get<CidadeResponse>("https://localhost:51699/api/cidade/estado");
                 setNos(resp.data.nos);
                 setDrones(resp.data.drones);
                 setPedidos(resp.data.pedidos);
+                console.log(resp.data);
             } catch (err) {
                 console.error("Erro ao carregar estado da cidade", err);
             }
         };
 
         fetchData();
-        const interval = setInterval(fetchData, 1000);
+        const interval = setInterval(fetchData, 5000);
         return () => clearInterval(interval);
     }, []);
 
     const renderCell = (x: number, y: number) => {
-        const no = nos.find((n) => n.X === x && n.Y === y);
+        const no = nos.find((n) => n.x === x && n.y === y);
         if (!no) return <td key={`${x}-${y}`} className="bg-light"></td>;
 
-        if (no.IsBase) {
+        if (no.isBase) {
             console.log("Renderizando base em", x, y);
             return (
                 <td
@@ -44,12 +45,11 @@ const CityMap: React.FC = () => {
                     className="text-center bg-info text-white fw-bold"
                     title="Base"
                 >
-                    B
                 </td>
             );
         }
 
-        if (no.IsObstaculo) {
+        if (no.isObstaculo) {
             return (
                 <td
                     key={`${x}-${y}`}
@@ -60,30 +60,29 @@ const CityMap: React.FC = () => {
         }
 
         const drone = drones.find(
-            (d) => d.LocalizacaoAtual?.X === x && d.LocalizacaoAtual?.Y === y
+            (d) => d.localizacaoAtual?.x === x && d.localizacaoAtual?.y === y
         );
         if (drone) {
             return (
                 <td
                     key={`${x}-${y}`}
-                    className="text-center bg-warning text-dark fw-bold"
-                    title={`Drone ${drone.Id} (${drone.Status})`}
+                    className="text-center bg-dark text-dark fw-bold"
+                    title={`Drone ${drone.id} (${drone.status})`}
                 >
-                    D
                 </td>
             );
         }
 
         const pedido = pedidos.find(
             (p) =>
-                p.LocalizacaoCliente?.X === x && p.LocalizacaoCliente?.Y === y
+                p.localizacaoCliente?.x === x && p.localizacaoCliente?.y === y
         );
         if (pedido) {
             return (
                 <td
                     key={`${x}-${y}`}
                     className="text-center bg-success text-white fw-bold"
-                    title={`Pedido ${pedido.Id} (${pedido.Prioridade})`}
+                    title={`Pedido ${pedido.id} (${pedido.prioridade})`}
                 >
                     P
                 </td>
@@ -95,9 +94,9 @@ const CityMap: React.FC = () => {
 
     // --- Estatísticas ---
     const totalDrones = drones.length;
-    const pedidosPendentes = pedidos.filter((p) => p.Status === "Pendente").length;
-    const pedidosEntregues = pedidos.filter((p) => p.Status === "Entregue").length;
-    const totalBases = nos.filter((n) => n.IsBase).length;
+    const pedidosPendentes = pedidos.filter((p) => p.status === "Pendente").length;
+    const pedidosEntregues = pedidos.filter((p) => p.status === "Entregue").length;
+    const totalBases = nos.filter((n) => n.isBase).length;
 
     return (
         <div className="card shadow-lg border-0 mt-4">

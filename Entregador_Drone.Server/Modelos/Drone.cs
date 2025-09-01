@@ -1,6 +1,26 @@
 ﻿namespace Entregador_Drone.Server.Modelos
 {
-    
+
+    public class DroneDto
+    {
+        public double CapacidadeMaximaKg { get; set; }
+        public double AutonomiaKm { get; set; }
+        public double BateriaAtual { get; set; }
+        public double ConsumoPorKm { get; set; }
+        public double ConsumoPorSegundo { get; set; }
+        public string Status { get; set; }
+
+        public DroneDto(double capacidadeMaximaKg, double autonomiaKm, double bateriaAtual, double consumoPorKm, double consumoPorSegundo, string status)
+        {
+            CapacidadeMaximaKg = capacidadeMaximaKg;
+            AutonomiaKm = autonomiaKm;
+            BateriaAtual = bateriaAtual;
+            ConsumoPorKm = consumoPorKm;
+            ConsumoPorSegundo = consumoPorSegundo;
+            Status = status;
+        }
+    }
+
     public class Drone
     {
         public int Id { get; set; }

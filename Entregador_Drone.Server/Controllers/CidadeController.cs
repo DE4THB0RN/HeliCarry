@@ -21,7 +21,7 @@ namespace Entregador_Drone.Server.Controllers
             try
             {
                 // 🔹 Limitar quantidade de nós retornados para não sobrecarregar o front
-                var nos = _context.C_No.Take(5000).ToList();
+                var nos = _context.C_No.ToList();
 
                 // 🔹 Drones agora possuem LocalizacaoAtual (referência a um No)
                 var drones = _context.Drone
